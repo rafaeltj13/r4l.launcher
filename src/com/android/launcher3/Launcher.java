@@ -1,3 +1,4 @@
+// Modified in 2026 for the Murine Categories fork. See FORK.md.
 /*
  * Copyright (C) 2008 The Android Open Source Project
  *
@@ -1177,6 +1178,9 @@ public class Launcher extends StatefulActivity<LauncherState>
                         @Override
                         public WindowInsets onProgress(WindowInsets windowInsets,
                                                        List<WindowInsetsAnimation> windowInsetsAnimations) {
+                            mAppsView.onDrawerImeInsets(
+                                    windowInsets.getInsets(WindowInsets.Type.ime()).bottom,
+                                    windowInsets.isVisible(WindowInsets.Type.ime()));
                             return windowInsets;
                         }
 
@@ -1185,6 +1189,8 @@ public class Launcher extends StatefulActivity<LauncherState>
                             WindowInsets insets = getRootView().getRootWindowInsets();
                             boolean isImeVisible =
                                     insets != null && insets.isVisible(WindowInsets.Type.ime());
+                            mAppsView.onDrawerImeInsets(insets == null ? 0
+                                    : insets.getInsets(WindowInsets.Type.ime()).bottom, isImeVisible);
                             getStatsLogManager().keyboardStateManager().setKeyboardState(
                                     isImeVisible ? SHOW : HIDE);
                         }
@@ -1254,6 +1260,7 @@ public class Launcher extends StatefulActivity<LauncherState>
     @Override
     public void onStateSetStart(LauncherState state) {
         super.onStateSetStart(state);
+        updateDrawerSoftInputMode(state);
         if (mDeferOverlayCallbacks) {
             scheduleDeferredCheck();
         }
@@ -1270,7 +1277,6 @@ public class Launcher extends StatefulActivity<LauncherState>
         }
         // When multiple pages are visible, show persistent page indicator
         mWorkspace.getPageIndicator().setShouldAutoHide(!state.hasFlag(FLAG_MULTI_PAGE));
-
         mPrevLauncherState = mStateManager.getCurrentStableState();
         if (mPrevLauncherState != state && ALL_APPS.equals(state)
                 // Making sure mAllAppsSessionLogId is null to avoid double logging.
@@ -1286,6 +1292,20 @@ public class Launcher extends StatefulActivity<LauncherState>
             }
         }
         updateDisallowBack();
+    }
+
+    /** Applies an option change even when settings returns to an already-open drawer. */
+    public void updateDrawerSoftInputMode() {
+        updateDrawerSoftInputMode(mStateManager.getState());
+    }
+
+    private void updateDrawerSoftInputMode(LauncherState state) {
+        int adjustMode = state == ALL_APPS && mAppsView.isBottomSearchEnabled()
+                ? LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+                : LayoutParams.SOFT_INPUT_ADJUST_PAN;
+        int softInputMode = getWindow().getAttributes().softInputMode;
+        getWindow().setSoftInputMode(
+                (softInputMode & ~LayoutParams.SOFT_INPUT_MASK_ADJUST) | adjustMode);
     }
 
     /**
@@ -3120,7 +3140,8 @@ public class Launcher extends StatefulActivity<LauncherState>
     }
 
     public Stream<SystemShortcut.Factory> getSupportedShortcuts() {
-        return Stream.of(APP_INFO, WIDGETS, INSTALL, UNINSTALL_APP);
+        return Stream.of(APP_INFO, WIDGETS, INSTALL, UNINSTALL_APP,
+                SystemShortcut.MOVE_TO_CATEGORY);
     }
 
     /**
