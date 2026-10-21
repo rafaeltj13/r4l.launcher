@@ -1191,6 +1191,9 @@ public class Launcher extends StatefulActivity<LauncherState>
                                     insets != null && insets.isVisible(WindowInsets.Type.ime());
                             mAppsView.onDrawerImeInsets(insets == null ? 0
                                     : insets.getInsets(WindowInsets.Type.ime()).bottom, isImeVisible);
+                            if ((animation.getTypeMask() & WindowInsets.Type.ime()) != 0) {
+                                mAppsView.onDrawerImeAnimationEnd(isImeVisible);
+                            }
                             getStatsLogManager().keyboardStateManager().setKeyboardState(
                                     isImeVisible ? SHOW : HIDE);
                         }
