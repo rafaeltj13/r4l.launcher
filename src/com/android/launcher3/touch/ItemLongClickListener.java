@@ -226,6 +226,8 @@ public class ItemLongClickListener {
             }
         });
 
+        // With category tabs, the drag stays in the drawer until it reaches the home zone.
+        launcher.getAppsView().holdCategoryDrag(v.getTag());
         launcher.getWorkspace().beginDragShared(v, launcher.getAppsView(), new DragOptions());
         return false;
     }
