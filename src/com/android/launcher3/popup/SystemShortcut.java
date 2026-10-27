@@ -14,8 +14,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ShortcutInfo;
 import android.graphics.Rect;
+import android.os.Bundle;
 import android.os.Process;
 import android.os.UserHandle;
+import android.os.UserManager;
 import android.util.Log;
 import android.view.View;
 import android.view.accessibility.AccessibilityNodeInfo;
@@ -384,15 +386,14 @@ public abstract class SystemShortcut<T extends ActivityContext> extends ItemInfo
                 if (originalView == null) {
                     return null;
                 }
-                if (!Flags.enablePrivateSpace()) {
+                Context context = originalView.getContext();
+                Bundle restrictions = context.getSystemService(UserManager.class)
+                        .getUserRestrictions(itemInfo.user);
+                if (restrictions.getBoolean(UserManager.DISALLOW_APPS_CONTROL, false)
+                        || restrictions.getBoolean(UserManager.DISALLOW_UNINSTALL_APPS, false)) {
                     return null;
                 }
-                if (!UserCache.INSTANCE.get(originalView.getContext()).getUserInfo(
-                        itemInfo.user).isPrivate()) {
-                    // If app is not Private Space app.
-                    return null;
-                }
-                ComponentName cn = SecondaryDropTarget.getUninstallTarget(originalView.getContext(),
+                ComponentName cn = SecondaryDropTarget.getUninstallTarget(context,
                         itemInfo);
                 if (cn == null) {
                     // If component name is null, don't show uninstall shortcut.
@@ -418,10 +419,13 @@ public abstract class SystemShortcut<T extends ActivityContext> extends ItemInfo
         public void onClick(View view) {
             dismissTaskMenuView();
             SecondaryDropTarget.performUninstall(view.getContext(), mComponentName, mItemInfo);
-            mTarget.getStatsLogManager()
-                    .logger()
-                    .withItemInfo(mItemInfo)
-                    .log(LAUNCHER_PRIVATE_SPACE_UNINSTALL_SYSTEM_SHORTCUT_TAP);
+            if (UserCache.INSTANCE.get(view.getContext()).getUserInfo(mItemInfo.user)
+                    .isPrivate()) {
+                mTarget.getStatsLogManager()
+                        .logger()
+                        .withItemInfo(mItemInfo)
+                        .log(LAUNCHER_PRIVATE_SPACE_UNINSTALL_SYSTEM_SHORTCUT_TAP);
+            }
         }
     }
 
