@@ -2222,7 +2222,11 @@ public class ActivityAllAppsContainerView<T extends Context & ActivityContext>
                 if (isSearchBarFloating()) {
                     bottomOffset += mSearchContainer.getHeight();
                 }
-                int bottom = mPadding.bottom + bottomOffset;
+                // Expanded category search pins the list above the field, which already clears
+                // the navigation bar and keyboard. The window insets include the keyboard, so
+                // reserving them again leaves less than one row and lets results scroll under
+                // the top edge.
+                int bottom = (isCategorySearchExpanded() ? 0 : mPadding.bottom) + bottomOffset;
                 if (!isSearch() && !isSearching() && !isCategorySearchExpanded() && !mDrawerImeVisible
                         && mCategoryController != null
                         && mCategoryController.getTabs().getVisibility() == VISIBLE) {
