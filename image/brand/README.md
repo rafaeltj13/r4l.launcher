@@ -1,19 +1,19 @@
 # r4l.launcher brand assets
 
-The launcher uses a dedicated home-and-app-grid symbol. A violet roof sits above four rounded app tiles. It shares the charcoal, off-white, and violet palette of [R4L Blog v2](https://r4l-blog-v2.vercel.app/), while having its own product icon.
+The launcher uses a dedicated home-and-app-grid symbol: a solid violet house badge with a 2 × 2 app grid set into it. Three tiles are off-white rounded squares; the upper-right one is a soft violet circle, echoing the drawer bar's round and rounded-square icon buttons. The bold silhouette, soft gradient, and shape contrast follow Android 16 and 17's Material 3 Expressive icons. It shares the charcoal, off-white, and violet palette of [R4L Blog v2](https://r4l-blog-v2.vercel.app/), while having its own product icon.
 
 ## Files
 
-- `r4l-launcher-mark.svg`: canonical editable icon, built with five geometric paths.
+- `r4l-launcher-mark.svg`: canonical editable icon: the house, four tiles, and a hidden `monochrome` path (the house with the grid cut out) for themed icons.
 - `r4l-launcher-logo.png`: clean 1024 × 1024 transparent export of the SVG.
-- `r4l-launcher-icon-concept.png`: original imagegen concept. Production exports use the clean SVG geometry.
-- `r4l-launcher-cover.png`: generated project cover updated with the launcher symbol.
+- `r4l-launcher-icon-concept.png`: original imagegen concept for the previous roof-and-tiles mark, kept for reference.
+- `r4l-launcher-cover.png`: generated project cover. It still shows the previous roof-and-tiles symbol.
 - `../app_icon/icon.svg`: square web/store icon.
 - `../../ic_launcher-playstore.png`: 512 × 512 store icon.
 - Android adaptive foreground, legacy, and monochrome vectors live in `res/drawable/ic_launcher_*.xml`.
 - `archive/`: previous monogram artwork and its generation prompts, retained for reference.
 
-Palette: charcoal `#1D242B`, off-white `#EDF7FF`, violet `#6554F4`. Debug builds use a darker violet background. Android themed icons use the same roof-and-grid shape in one color. Android settings continue using Material dynamic colors.
+Palette: charcoal background with a top glow (`#2A2F45` to `#181C24`), off-white `#EDF7FF`, violet gradient `#7C6CFF` to `#4F3DE0`, accent `#C9C1FF`. The brand violet `#6554F4` remains the reference color. Debug builds use a dark violet background. Android themed icons show the house in one color with the app grid cut out. Android settings continue using Material dynamic colors.
 
 ## Generation and production
 

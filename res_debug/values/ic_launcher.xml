@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- A violet background distinguishes local debug builds. -->
-    <color name="ic_launcher_background">#302855</color>
+    <color name="ic_launcher_background_glow">#3A2F70</color>
+    <color name="ic_launcher_background">#1C1736</color>
 </resources>

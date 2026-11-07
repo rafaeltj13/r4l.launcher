@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <color name="ic_launcher_background">#1D242B</color>
+    <!-- Radial glow near the top of the icon, fading to charcoal at the edges.
+         Keep in sync with BG_GLOW and BG_EDGE in tools/export-r4l-brand.py. -->
+    <color name="ic_launcher_background_glow">#2A2F45</color>
+    <color name="ic_launcher_background">#181C24</color>
     <!-- Unversioned fallback for launchers that request a legacy icon. -->
     <item name="ic_launcher" type="mipmap" tools:ignore="ReferenceType">@drawable/ic_launcher_legacy</item>
 </resources>
