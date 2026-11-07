@@ -10,9 +10,9 @@
     <item name="drawer_drag_category_label" type="id" />
     <item name="action_category_move_earlier" type="id" />
     <item name="action_category_move_later" type="id" />
-    <!-- M3 Expressive icon button that squishes into a rounded square while pressed. Selected
-         stays round, so its curve matches the pill bar and the search action's 20 dp corners.
-         The 40 dp visible shape keeps its 48 dp touch target. -->
+    <!-- M3 Expressive toggle icon button: round at rest, a 12 dp rounded square when selected
+         (concentric with the bar's 20 dp corners), and a tighter square while pressed. The 40 dp
+         visible shape keeps its 48 dp touch target. -->
     <style name="Widget.MurineCategories.CategoryButton" parent="Widget.Material3Expressive.Button.IconButton">
         <item name="android:minWidth">48dp</item>
         <item name="android:minHeight">48dp</item>
@@ -28,11 +28,6 @@
         <item name="iconPadding">0dp</item>
         <!-- The filled-button base would ripple in onPrimary over a surface it doesn't paint. -->
         <item name="rippleColor">@color/drawer_category_button_ripple</item>
-        <item name="materialSizeOverlay">@style/SizeOverlay.MurineCategories.CategoryButton</item>
-    </style>
-    <style name="SizeOverlay.MurineCategories.CategoryButton"
-        parent="SizeOverlay.Material3Expressive.Button.IconButton.Small">
-        <item name="containerShapeChecked">@style/ShapeAppearance.Material3.Corner.Full</item>
     </style>
     <style name="ThemeOverlay.MurineCategories.CategoryButton" parent="">
         <item name="materialButtonStyle">@style/Widget.MurineCategories.CategoryButton</item>

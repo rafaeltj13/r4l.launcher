@@ -14,7 +14,6 @@ import app.murinelauncher.graphics.WorkspaceBlurUtils
 import app.murinelauncher.graphics.WorkspaceBlurUtils.DrawerBlurType
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.shape.MaterialShapeDrawable
-import com.google.android.material.shape.RelativeCornerSize
 import com.google.android.material.shape.ShapeAppearanceModel
 import com.android.launcher3.R
 import com.google.android.material.R as MaterialR
@@ -25,13 +24,14 @@ import com.google.android.material.R as MaterialR
  */
 object DrawerCategoryTheme {
     /**
-     * Search and categories share a pill-shaped surface, like the M3 Expressive floating toolbar,
-     * whose material follows the drawer type: a frosted pane with an edge highlight, an opaque
-     * wallpaper-tinted surface, or flat neutral. Context must be M3 themed.
+     * Search and categories share a surface with [CORNER_DP] corners, whose material follows the
+     * drawer type: a frosted pane with an edge highlight, an opaque wallpaper-tinted surface, or
+     * flat neutral. Context must be M3 themed.
      */
     @JvmStatic
     fun surface(context: Context): MaterialShapeDrawable = MaterialShapeDrawable(
-        ShapeAppearanceModel.builder().setAllCornerSizes(RelativeCornerSize(0.5f)).build(),
+        ShapeAppearanceModel.builder().setAllCornerSizes(CORNER_DP *
+            context.resources.displayMetrics.density).build(),
     ).apply {
         when (WorkspaceBlurUtils.getDrawerBlur()) {
             DrawerBlurType.GLASS -> {
@@ -53,7 +53,7 @@ object DrawerCategoryTheme {
      */
     @JvmStatic
     fun searchAction(context: Context): MaterialShapeDrawable = MaterialShapeDrawable(
-        ShapeAppearanceModel.builder().setAllCornerSizes(SEARCH_ACTION_CORNER_DP *
+        ShapeAppearanceModel.builder().setAllCornerSizes(CORNER_DP *
             context.resources.displayMetrics.density).build(),
     ).apply {
         val primary = MaterialColors.getColor(context, androidx.appcompat.R.attr.colorPrimary,
@@ -76,7 +76,12 @@ object DrawerCategoryTheme {
         else -> MaterialColors.getColor(context, MaterialR.attr.colorOnPrimary, "DrawerCategoryTheme")
     }
 
-    const val SEARCH_ACTION_CORNER_DP = 20f
+    /**
+     * Corner radius shared by the category bar, search action, search field, and home strip. The
+     * selected category's 12 dp rounded square sits 8 dp inside the bar, so 20 dp keeps both
+     * curves concentric.
+     */
+    const val CORNER_DP = 20f
 
     fun wrap(context: Context): Context {
         val lightText = ColorUtils.calculateLuminance(

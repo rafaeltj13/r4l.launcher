@@ -82,9 +82,10 @@ and Private Space sections retain their existing layout.
 
 The category title uses bold Material 3 Headline Medium typography. The bar and category dialogs
 use a scoped Material 3 Expressive dynamic-color theme, matching Android 16 and 17 system UI.
-The bar is a pill-shaped floating toolbar. Its icon buttons stay round at rest and when
-selected, so their curve matches the bar and search action, and squish into a rounded square
-while pressed, with tonal selection and ripples. The 40 dp visible icon-button shape sits inside a 48 dp touch target; reducing
+The bar, search action, search field, and home strip share 20 dp corners. Category icon
+buttons are expressive toggles: round at rest, a 12 dp rounded square when selected (8 dp
+inside the bar, so the curves stay concentric), and a tighter square while pressed, with
+tonal selection and ripples. The 40 dp visible icon-button shape sits inside a 48 dp touch target; reducing
 visual padding does not reduce the touch target. Category icons use the same layered outline
 style as the settings icons: a full-weight main shape with lighter secondary detail. Launcher3's activity theme stays intact.
 The heading hides during search and grows with long names or larger system text.

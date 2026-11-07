@@ -59,20 +59,20 @@ class DrawerSearchMotion(
         AnimationUtils.loadInterpolator(context, MaterialR.interpolator.m3_sys_motion_easing_emphasized))
     private val density = context.resources.displayMetrics.density
     private val actionSize = DrawerSearchAction.SIZE_DP * density
-    private val actionCorner = DrawerCategoryTheme.SEARCH_ACTION_CORNER_DP * density
+    private val actionCorner = DrawerCategoryTheme.CORNER_DP * density
     private var animator: ValueAnimator? = null
     private var progress = 0f
     private var expanded = false
     private var enabled = false
     private val revealOutline = object : ViewOutlineProvider() {
         override fun getOutline(view: View, outline: Outline) {
-            // Collapsed, the field matches the action's rounded square at the end of the row.
+            // Collapsed, the field matches the action's rounded square at the end of the row; it
+            // keeps the shared corner radius as it widens.
             val inset = ((view.width - actionSize).coerceAtLeast(0f) * (1 - progress)).toInt()
-            val radius = actionCorner + (view.height / 2f - actionCorner) * progress
             if (view.layoutDirection == View.LAYOUT_DIRECTION_RTL) {
-                outline.setRoundRect(0, 0, view.width - inset, view.height, radius)
+                outline.setRoundRect(0, 0, view.width - inset, view.height, actionCorner)
             } else {
-                outline.setRoundRect(inset, 0, view.width, view.height, radius)
+                outline.setRoundRect(inset, 0, view.width, view.height, actionCorner)
             }
         }
     }
