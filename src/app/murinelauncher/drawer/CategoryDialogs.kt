@@ -59,7 +59,7 @@ object CategoryDialogs {
                 R.string.drawer_category_move_right ->
                     if (rtl) R.drawable.ic_chevron_start else R.drawable.ic_chevron_end
                 R.string.drawer_category_choose -> R.drawable.ic_category_manage
-                else -> android.R.drawable.ic_menu_sort_alphabetically
+                else -> R.drawable.gm_sort_by_alpha_24
             }
             OptionsPopupView.OptionItem(launcher, action, icon, IGNORE) {
                 performAction(launcher, repository, id, action)

@@ -159,7 +159,7 @@ public abstract class SystemShortcut<T extends ActivityContext> extends ItemInfo
                 || UserCache.INSTANCE.get(context.asContext()).getUserInfo(item.user).isPrivate()) {
             return null;
         }
-        return new SystemShortcut<ActivityContext>(android.R.drawable.ic_menu_sort_by_size,
+        return new SystemShortcut<ActivityContext>(R.drawable.gm_drive_file_move_24,
                 R.string.drawer_category_move, context, item, view) {
             @Override
             public void onClick(View clicked) {

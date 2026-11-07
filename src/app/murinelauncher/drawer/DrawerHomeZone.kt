@@ -107,7 +107,8 @@ class DrawerHomeZone(context: Context) : LinearLayout(context) {
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         if (progress <= 0f) return
-        val radius = dp(28).toFloat()
+        // Matches the pill-shaped drawer surface.
+        val radius = height / 2f
         bounds.set(0f, 0f, width.toFloat(), height.toFloat())
         clip.reset()
         clip.addRoundRect(bounds, radius, radius, Path.Direction.CW)

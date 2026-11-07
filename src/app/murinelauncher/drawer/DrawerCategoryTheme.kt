@@ -14,20 +14,24 @@ import app.murinelauncher.graphics.WorkspaceBlurUtils
 import app.murinelauncher.graphics.WorkspaceBlurUtils.DrawerBlurType
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.shape.MaterialShapeDrawable
+import com.google.android.material.shape.RelativeCornerSize
 import com.google.android.material.shape.ShapeAppearanceModel
 import com.android.launcher3.R
 import com.google.android.material.R as MaterialR
 
-/** A real M3 theme scoped to drawer controls; Launcher3 itself uses a platform theme. */
+/**
+ * A real M3 Expressive theme scoped to drawer controls, matching Android 16+ system UI; Launcher3
+ * itself uses a platform theme.
+ */
 object DrawerCategoryTheme {
     /**
-     * Search and categories share a 28 dp rounded surface whose material follows the drawer type:
-     * a frosted pane with an edge highlight, an opaque wallpaper-tinted surface, or flat neutral.
-     * Context must be M3 themed.
+     * Search and categories share a pill-shaped surface, like the M3 Expressive floating toolbar,
+     * whose material follows the drawer type: a frosted pane with an edge highlight, an opaque
+     * wallpaper-tinted surface, or flat neutral. Context must be M3 themed.
      */
     @JvmStatic
     fun surface(context: Context): MaterialShapeDrawable = MaterialShapeDrawable(
-        ShapeAppearanceModel.builder().setAllCornerSizes(28 * context.resources.displayMetrics.density).build(),
+        ShapeAppearanceModel.builder().setAllCornerSizes(RelativeCornerSize(0.5f)).build(),
     ).apply {
         when (WorkspaceBlurUtils.getDrawerBlur()) {
             DrawerBlurType.GLASS -> {
@@ -79,9 +83,9 @@ object DrawerCategoryTheme {
             context.getColor(R.color.all_apps_label_text_color),
         ) > 0.5
         return ContextThemeWrapper(context, if (lightText) {
-            MaterialR.style.Theme_Material3_DynamicColors_Dark
+            MaterialR.style.Theme_Material3Expressive_DynamicColors_Dark
         } else {
-            MaterialR.style.Theme_Material3_DynamicColors_Light
+            MaterialR.style.Theme_Material3Expressive_DynamicColors_Light
         })
     }
 }

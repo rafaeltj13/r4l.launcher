@@ -1,9 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Copyright 2026 r4l.launcher contributors. Licensed under Apache-2.0. -->
+<!-- Layered outline in the style of the settings icons: a full-weight main shape with lighter
+     secondary detail. Tinted at runtime; the alpha layers survive the tint. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="24dp" android:height="24dp"
     android:viewportWidth="24" android:viewportHeight="24">
-    <path android:fillColor="@android:color/transparent" android:strokeColor="#FFFFFFFF"
-        android:strokeWidth="1.7" android:strokeLineCap="round" android:strokeLineJoin="round"
-        android:pathData="M4,5 L20,5 Q22,5 22,7 L22,17 Q22,19 20,19 L4,19 Q2,19 2,17 L2,7 Q2,5 4,5 Z M2,10 L22,10 M6,15 L10,15" />
+    <path
+        android:pathData="M6.2,4.4H18.4A3,3 0,0 1,21.4,7.4V14.8"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="1.4"
+        android:strokeAlpha="0.45"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        />
+    <path
+        android:pathData="M5.4,7.2H16.2A2.8,2.8 0,0 1,19,10V16.8A2.8,2.8 0,0 1,16.2,19.6H5.4A2.8,2.8 0,0 1,2.6,16.8V10A2.8,2.8 0,0 1,5.4,7.2Z"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="1.7"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        />
+    <path
+        android:pathData="M2.9,11.4H18.7"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="1.5"
+        android:strokeAlpha="0.6"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        />
+    <path
+        android:pathData="M6,15.8H9.2"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="1.5"
+        android:strokeAlpha="0.85"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        />
 </vector>

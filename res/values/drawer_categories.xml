@@ -10,7 +10,9 @@
     <item name="drawer_drag_category_label" type="id" />
     <item name="action_category_move_earlier" type="id" />
     <item name="action_category_move_later" type="id" />
-    <style name="Widget.MurineCategories.CategoryButton" parent="Widget.Material3.Button.IconButton">
+    <!-- M3 Expressive toggle icon button: round at rest, a rounded square when selected, and a
+         tighter square while pressed. The 40 dp visible shape keeps its 48 dp touch target. -->
+    <style name="Widget.MurineCategories.CategoryButton" parent="Widget.Material3Expressive.Button.IconButton">
         <item name="android:minWidth">48dp</item>
         <item name="android:minHeight">48dp</item>
         <item name="android:paddingLeft">8dp</item>
@@ -23,7 +25,6 @@
         <item name="android:insetBottom">4dp</item>
         <item name="iconSize">24dp</item>
         <item name="iconPadding">0dp</item>
-        <item name="cornerRadius">20dp</item>
     </style>
     <style name="ThemeOverlay.MurineCategories.CategoryButton" parent="">
         <item name="materialButtonStyle">@style/Widget.MurineCategories.CategoryButton</item>

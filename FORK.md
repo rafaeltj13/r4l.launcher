@@ -80,10 +80,13 @@ height keep their title at the top of the grid and retain normal vertical scroll
 The original drawer and search results keep their top alignment. Profile education cards
 and Private Space sections retain their existing layout.
 
-The category title uses bold Material 3 Title Large typography. The bar and category dialogs
-use a scoped Material 3 dynamic-color theme, tonal selection, rounded icon buttons, and
-ripples. The 40 dp visible icon-button shape sits inside a 48 dp touch target; reducing
-visual padding does not reduce the touch target. Launcher3's activity theme stays intact.
+The category title uses bold Material 3 Headline Medium typography. The bar and category dialogs
+use a scoped Material 3 Expressive dynamic-color theme, matching Android 16 and 17 system UI.
+The bar is a pill-shaped floating toolbar. Its icon buttons are expressive toggles: round at
+rest, a rounded square when selected, and a tighter square while pressed, with tonal selection
+and ripples. The 40 dp visible icon-button shape sits inside a 48 dp touch target; reducing
+visual padding does not reduce the touch target. Category icons use the same layered outline
+style as the settings icons: a full-weight main shape with lighter secondary detail. Launcher3's activity theme stays intact.
 The heading hides during search and grows with long names or larger system text.
 Floating drawer controls follow **Drawer type**: search and categories share one surface,
 a frosted pane with an edge highlight for Frosted, an opaque wallpaper-tinted surface for
