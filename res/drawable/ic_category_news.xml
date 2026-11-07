@@ -40,7 +40,7 @@
         android:pathData="M6.4,17H12"
         android:strokeColor="#FFFFFFFF"
         android:strokeWidth="1.4"
-        android:strokeAlpha="0.4"
+        android:strokeAlpha="0.45"
         android:strokeLineCap="round"
         android:strokeLineJoin="round"
         />

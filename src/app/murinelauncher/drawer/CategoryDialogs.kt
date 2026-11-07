@@ -14,7 +14,7 @@ import com.android.launcher3.Launcher
 import com.android.launcher3.logging.StatsLogManager.LauncherEvent.IGNORE
 import com.android.launcher3.views.OptionsPopupView
 import android.text.InputFilter
-import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.view.View
@@ -22,6 +22,10 @@ import android.view.ViewGroup
 import com.android.launcher3.R
 import com.android.launcher3.model.data.AppInfo
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
+import com.google.android.material.R as MaterialR
+import androidx.core.widget.doAfterTextChanged
 import androidx.appcompat.content.res.AppCompatResources
 
 /** Editing UI for drawer category tabs and app shortcuts. */
@@ -129,18 +133,28 @@ object CategoryDialogs {
     }
 
     private fun rename(context: Context, repository: CategoryRepository, id: String) {
-        val input = EditText(DrawerCategoryTheme.wrap(context)).apply {
+        val themed = DrawerCategoryTheme.wrap(context)
+        val field = TextInputLayout(themed, null, MaterialR.attr.textInputOutlinedStyle).apply {
+            hint = context.getString(R.string.drawer_category_name)
+        }
+        val input = TextInputEditText(field.context).apply {
             setSingleLine()
             filters = arrayOf(InputFilter.LengthFilter(64))
-            hint = context.getString(R.string.drawer_category_name)
             repository.state().categories.firstOrNull { it.id == id }?.let {
                 setText(repository.title(it))
                 selectAll()
             }
+            doAfterTextChanged { field.error = null }
         }
-        val dialog = MaterialAlertDialogBuilder(DrawerCategoryTheme.wrap(context))
+        field.addView(input)
+        val padding = (24 * context.resources.displayMetrics.density).toInt()
+        val container = FrameLayout(themed).apply {
+            setPadding(padding, padding / 3, padding, 0)
+            addView(field)
+        }
+        val dialog = MaterialAlertDialogBuilder(themed)
             .setTitle(R.string.drawer_category_rename)
-            .setView(input)
+            .setView(container)
             .setPositiveButton(android.R.string.ok, null)
             .setNegativeButton(android.R.string.cancel, null)
             .create()
@@ -150,7 +164,7 @@ object CategoryDialogs {
                 if (name.isBlank() || repository.state().shown.any {
                         it.id != id && repository.title(it).equals(name, ignoreCase = true)
                     }) {
-                    input.error = context.getString(R.string.drawer_category_name_error)
+                    field.error = context.getString(R.string.drawer_category_name_error)
                 } else {
                     repository.edit { it.rename(id, name) }
                     dialog.dismiss()

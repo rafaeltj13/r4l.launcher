@@ -25,6 +25,8 @@
         <item name="android:insetBottom">4dp</item>
         <item name="iconSize">24dp</item>
         <item name="iconPadding">0dp</item>
+        <!-- The filled-button base would ripple in onPrimary over a surface it doesn't paint. -->
+        <item name="rippleColor">@color/drawer_category_button_ripple</item>
     </style>
     <style name="ThemeOverlay.MurineCategories.CategoryButton" parent="">
         <item name="materialButtonStyle">@style/Widget.MurineCategories.CategoryButton</item>

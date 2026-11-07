@@ -82,10 +82,17 @@ object DrawerCategoryTheme {
         val lightText = ColorUtils.calculateLuminance(
             context.getColor(R.color.all_apps_label_text_color),
         ) > 0.5
-        return ContextThemeWrapper(context, if (lightText) {
-            MaterialR.style.Theme_Material3Expressive_DynamicColors_Dark
+        // Material's API 31+ Theme.Material3Expressive.DynamicColors.* inherit the plain M3
+        // themes, so apply dynamic colors as an overlay on the Expressive base instead.
+        val base = ContextThemeWrapper(context, if (lightText) {
+            MaterialR.style.Theme_Material3Expressive_Dark
         } else {
-            MaterialR.style.Theme_Material3Expressive_DynamicColors_Light
+            MaterialR.style.Theme_Material3Expressive_Light
+        })
+        return ContextThemeWrapper(base, if (lightText) {
+            MaterialR.style.ThemeOverlay_Material3_DynamicColors_Dark
+        } else {
+            MaterialR.style.ThemeOverlay_Material3_DynamicColors_Light
         })
     }
 }
