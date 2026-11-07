@@ -44,6 +44,7 @@ import com.android.launcher3.R;
 import com.android.launcher3.allapps.search.SearchAdapterProvider;
 import com.android.launcher3.model.data.AppInfo;
 import com.android.launcher3.model.data.ItemInfo;
+import com.android.launcher3.util.Themes;
 import com.android.launcher3.views.ActivityContext;
 
 import java.util.Objects;
@@ -319,9 +320,22 @@ public abstract class BaseAllAppsAdapter<T extends Context & ActivityContext> ex
             }
             case VIEW_TYPE_EMPTY_SEARCH: {
                 AppInfo info = mApps.getAdapterItems().get(position).itemInfo;
+                TextView text = (TextView) holder.itemView;
                 if (info != null) {
-                    ((TextView) holder.itemView).setText(mActivityContext.getString(
+                    text.setText(mActivityContext.getString(
                             R.string.all_apps_no_search_results, info.title));
+                    text.setTextColor(Themes.getAttrColor(mActivityContext,
+                            android.R.attr.textColorTertiary));
+                    text.setPadding(text.getPaddingLeft(), mActivityContext.getResources()
+                            .getDimensionPixelSize(R.dimen.all_apps_empty_search_message_top_offset),
+                            text.getPaddingRight(), text.getPaddingBottom());
+                } else if (mApps.getEmptyMessage() != null) {
+                    // An empty drawer category: match the category heading above it.
+                    text.setText(mApps.getEmptyMessage());
+                    text.setTextColor(mActivityContext.getColor(R.color.all_apps_label_text_color));
+                    // The heading above already provides the gap a search result list needs.
+                    text.setPadding(text.getPaddingLeft(), 0, text.getPaddingRight(),
+                            text.getPaddingBottom());
                 }
                 break;
             }

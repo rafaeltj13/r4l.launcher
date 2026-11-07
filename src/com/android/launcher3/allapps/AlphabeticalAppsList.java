@@ -18,6 +18,7 @@ package com.android.launcher3.allapps;
 import static android.multiuser.Flags.enableMovingContentIntoPrivateSpace;
 
 import static com.android.launcher3.allapps.BaseAllAppsAdapter.VIEW_TYPE_BOTTOM_VIEW_TO_SCROLL_TO;
+import static com.android.launcher3.allapps.BaseAllAppsAdapter.VIEW_TYPE_EMPTY_SEARCH;
 import static com.android.launcher3.allapps.BaseAllAppsAdapter.VIEW_TYPE_MASK_PRIVATE_SPACE_HEADER;
 import static com.android.launcher3.allapps.SectionDecorationInfo.ROUND_BOTTOM_LEFT;
 import static com.android.launcher3.allapps.SectionDecorationInfo.ROUND_BOTTOM_RIGHT;
@@ -127,6 +128,8 @@ public class AlphabeticalAppsList<T extends Context & ActivityContext> implement
     private Predicate<ItemInfo> mItemFilter;
     // Custom positions from drawer categories; apps without one sort by name after them.
     @Nullable private ToIntFunction<AppInfo> mItemOrder;
+    // Shown in place of the grid when a drawer category has no apps; null shows nothing.
+    @Nullable private CharSequence mEmptyMessage;
 
     public AlphabeticalAppsList(Context context, @Nullable AllAppsStore<T> appsStore,
             WorkProfileManager workProfileManager, PrivateProfileManager privateProfileManager) {
@@ -165,6 +168,16 @@ public class AlphabeticalAppsList<T extends Context & ActivityContext> implement
             @Nullable ToIntFunction<AppInfo> itemOrder) {
         mItemOrder = itemOrder;
         updateItemFilter(itemFilter);
+    }
+
+    /** Message for an empty filtered list, e.g. a drawer category with no apps; null for none. */
+    public void setEmptyMessage(@Nullable CharSequence message) {
+        mEmptyMessage = message;
+    }
+
+    @Nullable
+    public CharSequence getEmptyMessage() {
+        return mEmptyMessage;
     }
 
     /** Apps currently shown, in display order; empty while showing search results. */
@@ -348,6 +361,11 @@ public class AlphabeticalAppsList<T extends Context & ActivityContext> implement
                     Log.d(TAG, "Adding FastScrollSection for work edu card.");
                 }
                 position = addAppsWithSections(mApps, position);
+                // Skip while the app model loads, so a cold start doesn't flash the message.
+                if (mApps.isEmpty() && mEmptyMessage != null && mAllAppsStore != null
+                        && mAllAppsStore.getApps().length > 0) {
+                    mAdapterItems.add(new AdapterItem(VIEW_TYPE_EMPTY_SEARCH));
+                }
             }
             if (Flags.enablePrivateSpace()) {
                 position = addPrivateSpaceItems(position);

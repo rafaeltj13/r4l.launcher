@@ -16,6 +16,7 @@ import android.view.Gravity
 import android.view.View
 import android.widget.RelativeLayout
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.graphics.ColorUtils
 import androidx.core.view.ViewCompat
 import com.android.launcher3.Launcher
 import com.android.launcher3.LauncherPrefs
@@ -41,6 +42,10 @@ class DrawerCategoriesController(private val host: ActivityAllAppsContainerView<
         setTextAppearance(MaterialR.style.TextAppearance_Material3_HeadlineMedium)
         setTypeface(typeface, Typeface.BOLD)
         setTextColor(context.getColor(R.color.all_apps_label_text_color))
+        // The label color is fixed while the drawer behind it follows the wallpaper; a soft halo in
+        // the opposite tone keeps the heading readable over light Frosted and similar backgrounds.
+        val darkText = ColorUtils.calculateLuminance(currentTextColor) < 0.5
+        setShadowLayer(dp(6).toFloat(), 0f, 0f, if (darkText) HALO_LIGHT else HALO_DARK)
         gravity = Gravity.CENTER_VERTICAL or Gravity.START
         minHeight = dp(64)
         compoundDrawablePadding = dp(12)
@@ -165,6 +170,10 @@ class DrawerCategoriesController(private val host: ActivityAllAppsContainerView<
         (previewKey != null && repository.key(item) == previewKey)
 
     val selectedCategory: String get() = selected
+
+    /** Shown in an empty category's grid; null while categories are off. */
+    val emptyMessage: CharSequence?
+        get() = if (enabled) context.getString(R.string.drawer_category_empty) else null
 
     private fun updateOrder() {
         val keys = previewKeys ?: repository.state().order(selected).ifEmpty { null }
@@ -322,4 +331,9 @@ class DrawerCategoriesController(private val host: ActivityAllAppsContainerView<
     }
 
     private fun dp(value: Int): Int = (value * context.resources.displayMetrics.density).toInt()
+
+    private companion object {
+        const val HALO_LIGHT = 0xB3FFFFFF.toInt()
+        const val HALO_DARK = 0x99000000.toInt()
+    }
 }

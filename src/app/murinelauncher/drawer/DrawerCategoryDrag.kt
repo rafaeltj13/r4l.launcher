@@ -24,7 +24,6 @@ import com.android.launcher3.dragndrop.DragLayer
 import com.android.launcher3.dragndrop.DragOptions
 import com.android.launcher3.dragndrop.DragView
 import com.android.launcher3.model.data.AppInfo
-import com.android.launcher3.views.Snackbar
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.shape.ShapeAppearanceModel
@@ -258,15 +257,7 @@ class DrawerCategoryDrag(
             it.assign(key, target)
             if (keys != null) categories.saveOrder(it, keys)
         }
-        val category = repository.state().categories.firstOrNull { it.id == target } ?: return
-        val message = context.getString(R.string.drawer_category_moved, app.title,
-            repository.title(category))
-        tabs.getGlobalVisibleRect(bounds)
-        val dragLayer = launcher.dragLayer
-        val above = dragLayer.height - bounds.top + dp(8)
-        Snackbar.show(launcher, message, R.string.undo, null, {
-            repository.edit { it.restore(before) }
-        }, above)
+        CategoryDialogs.showMoved(launcher, repository, app, before)
     }
 
     private fun animateIntoCell(view: DragView<*>, grid: ViewGroup) {

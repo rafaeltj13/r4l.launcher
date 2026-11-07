@@ -6,8 +6,6 @@
  */
 package app.murinelauncher.drawer
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
@@ -34,6 +32,7 @@ class DrawerHomeZone(context: Context) : LinearLayout(context) {
     private val bounds = RectF()
     private var progress = 0f
     private var fill: ValueAnimator? = null
+    private var hold: Runnable? = null
 
     init {
         id = R.id.drawer_drag_home_zone
@@ -73,25 +72,28 @@ class DrawerHomeZone(context: Context) : LinearLayout(context) {
             .withEndAction { visibility = GONE }.start()
     }
 
-    /** Fills the strip over [durationMs]; [onFull] runs only if the fill is not cancelled. */
+    /**
+     * Runs [onFull] after [durationMs] of real time unless cancelled. The fill only shows progress:
+     * Android's animator scale changes its speed, but never how long the user has to hold.
+     */
     fun startFill(durationMs: Long, onFull: () -> Unit) {
         if (fill != null) return
         fill = ValueAnimator.ofFloat(progress, 1f).apply {
             duration = durationMs
             addUpdateListener { setProgress(it.animatedValue as Float) }
-            addListener(object : AnimatorListenerAdapter() {
-                private var cancelled = false
-                override fun onAnimationCancel(animation: Animator) { cancelled = true }
-                override fun onAnimationEnd(animation: Animator) {
-                    if (fill === animation) fill = null
-                    if (!cancelled) onFull()
-                }
-            })
             start()
         }
+        hold = Runnable {
+            hold = null
+            onFull()
+        }.also { postDelayed(it, durationMs) }
     }
 
     fun cancelFill() {
+        hold?.let {
+            hold = null
+            removeCallbacks(it)
+        }
         fill?.let {
             fill = null
             it.cancel()

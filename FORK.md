@@ -42,13 +42,15 @@ In launcher settings, open **App drawer**:
   and lets you choose each category's icon.
 - Long-press an app in the drawer or app-search results and choose **Move to category**.
   Select a group to pin its assignment, or **Use automatic category** to clear the correction.
+  When the category changes, the same snackbar with **Undo** as a drag-and-drop move confirms it.
 - With category tabs on, dragging an app keeps the drawer open. Drop it on a category
   button to pin it there; the button fills and shows its name while the app is over it.
   A snackbar above the bar confirms the move, and **Undo** restores the previous pinned or
   automatic category. Only buttons on the bar's current page accept drops. Dropping on the
   app's own category or anywhere else returns the icon. Hold the app over the
   **Home screen** strip at the top for 300 ms to continue the drag on the home screen as
-  before; releasing on the strip sooner cancels. Dragging from search results closes
+  before; releasing on the strip sooner cancels. The hold is timed in real time, so it
+  stays 300 ms when system animations are off or sped up. Dragging from search results closes
   search first. With category tabs off, a drawer drag goes straight to the home screen.
 - Drag an app within its category's grid to reorder it: pausing over another app for 150 ms
   slides the grid open where the app will land. The first reorder saves the order shown at
@@ -64,9 +66,10 @@ Deleting a category moves its explicitly assigned apps to the fallback category.
 automatically mapped to a deleted category also fall back there. The drawer immediately
 selects that destination so the moved apps remain visible. A cold start retains a saved
 fallback selection while the app model loads. The fallback can be renamed and moved but
-not deleted. All empty categories are hidden from drawer navigation. Their definitions
-remain in Manage categories and their tabs return when they have visible apps. Loading
-the app model preserves the saved selection without temporarily showing empty tabs.
+not deleted. Categories picked for the bar keep their tab while empty, so they stay drop
+targets; selecting one shows a short hint on how to move apps into it. Other only gets a
+tab while it holds apps. Loading the app model preserves the saved selection without
+temporarily showing empty tabs.
 
 Dense phone grids keep the requested column count and icon-size preference, but cap the
 drawn icons to the cell width with a 12 dp horizontal gap. This prevents icons from
@@ -75,7 +78,8 @@ also removes the unused top-search gutter when no profile tabs or floating heade
 need that space.
 
 Short category grids and their titles align together at the bottom above the drawer
-controls, so the title stays just above the first app row. Grids that fill the available
+controls, so the title stays just above the first app row. An empty category's hint sits
+in the same place as that first row. Grids that fill the available
 height keep their title at the top of the grid and retain normal vertical scrolling.
 The original drawer and search results keep their top alignment. Profile education cards
 and Private Space sections retain their existing layout.
@@ -88,7 +92,8 @@ inside the bar, so the curves stay concentric), and a tighter square while press
 tonal selection and ripples. The 40 dp visible icon-button shape sits inside a 48 dp touch target; reducing
 visual padding does not reduce the touch target. Category icons use the same layered outline
 style as the settings icons: a full-weight main shape with lighter secondary detail. Launcher3's activity theme stays intact.
-The heading hides during search and grows with long names or larger system text.
+The heading hides during search and grows with long names or larger system text. A soft
+halo in the opposite tone keeps it legible over Frosted and wallpaper backgrounds.
 Floating drawer controls follow **Drawer type**: search and categories share one surface,
 a frosted pane with an edge highlight for Frosted, an opaque wallpaper-tinted surface for
 MICA, or flat neutral grey for Translucent. They stay readable over scrolling apps and

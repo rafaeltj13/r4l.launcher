@@ -13,6 +13,7 @@ import com.android.launcher3.AbstractFloatingView
 import com.android.launcher3.Launcher
 import com.android.launcher3.logging.StatsLogManager.LauncherEvent.IGNORE
 import com.android.launcher3.views.OptionsPopupView
+import com.android.launcher3.views.Snackbar
 import android.text.InputFilter
 import android.widget.FrameLayout
 import android.widget.ArrayAdapter
@@ -37,14 +38,47 @@ object CategoryDialogs {
         MaterialAlertDialogBuilder(DrawerCategoryTheme.wrap(context))
             .setTitle(context.getString(R.string.drawer_category_move_app, app.title))
             .setSingleChoiceItems(categories.map(repository::title).toTypedArray(), current) { dialog, index ->
-                repository.edit { it.assign(repository.key(app), categories[index].id) }
+                val target = categories[index].id
+                val previous = repository.categoryFor(app)
+                val before = repository.state().capture(repository.key(app))
+                // Picking the current group still pins it; only a real move needs confirming.
+                repository.edit { it.assign(repository.key(app), target) }
                 dialog.dismiss()
+                if (target != previous) showMoved(context, repository, app, before)
             }
             .setNeutralButton(R.string.drawer_category_automatic) { _, _ ->
-                repository.edit { it.assignments.remove(repository.key(app)) }
+                val key = repository.key(app)
+                if (key !in repository.state().assignments) return@setNeutralButton
+                val previous = repository.categoryFor(app)
+                val before = repository.state().capture(key)
+                repository.edit { it.assignments.remove(key) }
+                if (repository.categoryFor(app) != previous) showMoved(context, repository, app, before)
             }
             .setNegativeButton(android.R.string.cancel, null)
             .show()
+    }
+
+    /**
+     * Confirms that [app] now sits in its current category, with Undo restoring [before]. Drag and
+     * menu moves share it. The snackbar clears the category bar when the bar is on screen.
+     */
+    @JvmStatic
+    fun showMoved(context: Context, repository: CategoryRepository, app: AppInfo,
+            before: CategoryState.Snapshot) {
+        val launcher = Launcher.getLauncher(context)
+        val category = repository.state().categories
+            .firstOrNull { it.id == repository.categoryFor(app) } ?: return
+        val message = context.getString(R.string.drawer_category_moved, app.title,
+            repository.title(category))
+        val bar = launcher.findViewById<View>(R.id.drawer_category_tabs)
+        val bounds = Rect()
+        val above = if (bar != null && bar.isShown && bar.getGlobalVisibleRect(bounds)) {
+            launcher.dragLayer.height - bounds.top +
+                (8 * context.resources.displayMetrics.density).toInt()
+        } else -1
+        Snackbar.show(launcher, message, R.string.undo, null, {
+            repository.edit { it.restore(before) }
+        }, above)
     }
 
     /** Uses the launcher's app-shortcut popup, anchored to the category button. */

@@ -1350,6 +1350,9 @@ public class ActivityAllAppsContainerView<T extends Context & ActivityContext>
     public void applyCategoryFilter() {
         if (mCategoryController == null) return;
         ToIntFunction<AppInfo> order = mCategoryController.getOrder();
+        CharSequence empty = mCategoryController.getEmptyMessage();
+        mAH.get(MAIN).mAppsList.setEmptyMessage(empty);
+        mAH.get(WORK).mAppsList.setEmptyMessage(empty);
         mAH.get(MAIN).mAppsList.updateItemFilter(
                 mPersonalMatcher.and(mCategoryController::matches), order);
         mAH.get(WORK).mAppsList.updateItemFilter(
@@ -2253,6 +2256,19 @@ public class ActivityAllAppsContainerView<T extends Context & ActivityContext>
                     int contentHeight = mAppsList.getNumAppRows()
                             * mActivityContext.getDeviceProfile().allAppsCellHeightPx;
                     top = Math.max(top, mRecyclerView.getHeight() - bottom - contentHeight);
+                } else if (!isSearch() && !isSearching() && !isCategorySearchExpanded()
+                        && !mDrawerImeVisible && !isSearchBarFloating()
+                        && isEmptyCategoryMessage()) {
+                    // An empty category's message sits where its first row would, under the
+                    // heading and just above the bar. Measure it once it has been laid out.
+                    View message = mRecyclerView.getChildCount() > 0
+                            ? mRecyclerView.getChildAt(0) : null;
+                    if (message == null || message.getHeight() == 0) {
+                        mRecyclerView.post(this::applyPadding);
+                    } else {
+                        top = Math.max(top,
+                                mRecyclerView.getHeight() - bottom - message.getHeight());
+                    }
                 }
                 if (mRecyclerView.getPaddingLeft() != mPadding.left
                         || mRecyclerView.getPaddingTop() != top
@@ -2261,6 +2277,13 @@ public class ActivityAllAppsContainerView<T extends Context & ActivityContext>
                     mRecyclerView.setPadding(mPadding.left, top, mPadding.right, bottom);
                 }
             }
+        }
+
+        private boolean isEmptyCategoryMessage() {
+            List<AdapterItem> items = mAppsList.getAdapterItems();
+            return mAppsList.getEmptyMessage() != null && items.size() == 1
+                    && items.get(0).viewType == BaseAllAppsAdapter.VIEW_TYPE_EMPTY_SEARCH
+                    && items.get(0).itemInfo == null;
         }
 
         private boolean isWork() {

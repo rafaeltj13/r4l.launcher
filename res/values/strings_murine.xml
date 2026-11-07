@@ -222,6 +222,7 @@
     <string name="drawer_category_automatic" tools:ignore="MissingTranslation">Use automatic category</string>
     <string name="drawer_drag_home" tools:ignore="MissingTranslation">Home screen</string>
     <string name="drawer_category_moved" tools:ignore="MissingTranslation">Moved %1$s to %2$s</string>
+    <string name="drawer_category_empty" tools:ignore="MissingTranslation">No apps here yet. Hold an app and choose Move to category.</string>
     <string name="drawer_category_games" tools:ignore="MissingTranslation">Games</string>
     <string name="drawer_category_social" tools:ignore="MissingTranslation">Social</string>
     <string name="drawer_category_messaging" tools:ignore="MissingTranslation">Messaging</string>
