@@ -30,7 +30,9 @@ import android.util.Size;
 import android.util.SizeF;
 
 import com.android.launcher3.DeviceProfile;
+import com.android.launcher3.InvariantDeviceProfile;
 import com.android.launcher3.LauncherAppState;
+import com.android.launcher3.LauncherPrefs;
 import com.android.launcher3.R;
 import com.android.launcher3.model.WidgetItem;
 
@@ -48,12 +50,34 @@ public final class WidgetSizes {
         ArrayList<SizeF> sizes = new ArrayList<>(2);
         final float density = context.getResources().getDisplayMetrics().density;
 
-        for (DeviceProfile profile : LauncherAppState.getIDP(context).supportedProfiles) {
+        for (DeviceProfile profile : getReachableProfiles(context)) {
             Size widgetSizePx = getWidgetSizePx(profile, spanX, spanY);
             sizes.add(new SizeF(widgetSizePx.getWidth() / density,
                     widgetSizePx.getHeight() / density));
         }
         return sizes;
+    }
+
+    /**
+     * Returns the profiles the home screen can actually be shown in.
+     *
+     * <p>On a phone with home rotation off, the landscape profile is never displayed, but its
+     * short cells still end up as the minimum height a widget is told about. Widgets that size
+     * their layout to that minimum (e.g. Google Photos) then render a tiny layout in portrait.
+     */
+    private static List<DeviceProfile> getReachableProfiles(Context context) {
+        InvariantDeviceProfile idp = LauncherAppState.getIDP(context);
+        List<DeviceProfile> all = idp.supportedProfiles;
+        if (idp.isFixedLandscape || LauncherPrefs.get(context).get(LauncherPrefs.ALLOW_ROTATION)) {
+            return all;
+        }
+        List<DeviceProfile> reachable = new ArrayList<>(all.size());
+        for (DeviceProfile profile : all) {
+            if (!profile.isPhone || !profile.isLandscape) {
+                reachable.add(profile);
+            }
+        }
+        return reachable.isEmpty() ? all : reachable;
     }
 
     /** Returns the size, in pixels, a widget of given spans & {@code profile}. */
